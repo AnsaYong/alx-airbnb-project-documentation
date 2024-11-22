@@ -1,136 +1,252 @@
-## vTechnical and Functional Requirements
-
-
+## Detailed Technical and Functional Requirements
 ### 1. User Registration
-#### Functional Requirements:
+#### API Endpoints:
 
-Users can create accounts using an email address and password.
-Support for OAuth-based authentication (Google, Facebook, etc.).
-Validation for required fields (e.g., email, password strength).
-Secure password storage using encryption (e.g., bcrypt).
-#### Technical Requirements:
+POST /api/register: Create a new user account.
+##### Input:
+{
+  "email": "user@example.com",
+  "password": "StrongPassword123",
+  "role": "user"
+}
+##### Output:
+##### Success:
 
-Frontend: React form validation, integration with OAuth APIs.
-Backend: User authentication APIs using Django Rest Framework (DRF).
-Database: User table with fields for ID, name, email, hashed password, role, and registration date.
-Security: Implement HTTPS, input sanitization, and JWT for authentication.
+{
+  "message": "User registered successfully."
+}
+##### Failure:
 
+{
+  "error": "Email already exists."
+}
+#### Validation Rules:
 
+Email: Must be valid and unique.
+Password: Minimum 8 characters, at least one uppercase letter, one number, and one special character.
+Role: Must be user or host.
+#### Performance Criteria:
+
+API response time < 300ms.
+Handle 50 concurrent registration requests.
 ### 2. Property Listing
-#### Functional Requirements:
+#### API Endpoints:
 
-Hosts can create, edit, and delete property listings.
-Include fields for title, description, location, price, amenities, photos, and availability.
-Validation for required fields (e.g., title, location, price).
-Upload images with size and format restrictions.
-#### Technical Requirements:
+POST /api/properties: Create a new property.
+GET /api/properties/{id}: Fetch property details by ID.
+PUT /api/properties/{id}: Update property details.
+DELETE /api/properties/{id}: Delete a property.
+##### Input (for POST/PUT):
 
-Frontend: Form components for creating/editing listings, image upload functionality.
-Backend: APIs for CRUD operations on property data.
-Database: Property table with fields for ID, host ID, title, description, price, location, amenities (stored as JSON), and images.
-Storage: Use cloud-based storage (e.g., AWS S3) for uploaded images.
+{
+  "title": "Beachside Villa",
+  "description": "A beautiful villa by the sea.",
+  "price": 250.00,
+  "location": "Miami, FL",
+  "amenities": ["WiFi", "Pool", "Parking"],
+  "images": ["image1_url", "image2_url"]
+}
+##### Output (for POST/PUT):
 
+##### Success:
 
+{
+  "message": "Property created successfully.",
+  "property_id": 101
+}
+##### Failure:
+json
+Copy code
+{
+  "error": "Invalid data format."
+}
+#### Validation Rules:
+
+Title: Required, max 100 characters.
+Price: Must be a positive decimal.
+Images: Max 5 images; each must be in JPG or PNG format.
+Performance Criteria:
+
+API response time < 400ms for fetch requests.
+Handle 100 concurrent property listings.
 ### 3. Property Search
-#### Functional Requirements:
+API Endpoints:
 
-Users can search for properties using filters like location, price range, amenities, and number of guests.
-Pagination for large result sets.
-Display search results with key property details.
-#### Technical Requirements:
+GET /api/search: Search properties by filters.
+##### Input (Query Parameters):
+location: Required.
+price_min and price_max: Optional.
+amenities: Optional, comma-separated list.
+##### Output:
 
-Frontend: Search bar with filter components, results displayed in a grid.
-Backend: Endpoint for querying properties with search and filter parameters.
-Database: Indexing on searchable fields (e.g., location, price).
-Optimization: Use Elasticsearch or similar for efficient searching.
+##### Success:
 
+[
+  {
+    "id": 101,
+    "title": "Beachside Villa",
+    "location": "Miami, FL",
+    "price": 250.00,
+    "amenities": ["WiFi", "Pool"]
+  },
+  ...
+]
+##### Failure:
 
+{
+  "error": "Invalid search parameters."
+}
+#### Validation Rules:
+
+Location: Required and must match a valid city/state.
+Price Range: Minimum must be less than maximum.
+Performance Criteria:
+
+Return results within 500ms for datasets of up to 10,000 properties.
+Use Elasticsearch for efficient indexing and filtering.
 ### 4. Property Booking
-#### Functional Requirements:
+API Endpoints:
 
-Users can book properties for specific dates.
-Prevent double bookings by validating availability.
-Allow hosts to accept or decline booking requests.
-Users and hosts can view booking statuses (e.g., pending, confirmed, completed).
-#### Technical Requirements:
+POST /api/bookings: Create a booking.
+##### Input:
 
-Frontend: Calendar picker for date selection; booking request form.
-Backend: API for managing bookings and checking availability.
-Database: Booking table with fields for user ID, property ID, dates, status, and payment status.
-Concurrency: Use database-level locks or transactions to prevent double bookings.
+{
+  "user_id": 5,
+  "property_id": 101,
+  "start_date": "2024-12-01",
+  "end_date": "2024-12-10"
+}
+##### Output:
+##### Success:
+
+{
+  "message": "Booking created successfully.",
+  "booking_id": 5001
+}
+##### Failure:
+
+{
+  "error": "Property not available for the selected dates."
+}
+#### Validation Rules:
+
+Dates: Start date must be earlier than end date.
+Availability: Check for overlapping bookings in the database.
+Performance Criteria:
+
+Handle 200 concurrent booking requests.
+Validate and lock booking slots within 300ms.
 ### 5. Payment Processing
-#### Functional Requirements:
+API Endpoints:
 
-Secure handling of payments via gateways like Stripe or PayPal.
-Support for multiple currencies.
-Allow upfront payments for bookings.
-Automatically handle payouts to hosts after bookings are completed.
-#### Technical Requirements:
+POST /api/payments: Initiate a payment.
+##### Input:
 
-Frontend: Payment UI integrated with the selected payment gateway.
-Backend: APIs for initiating, verifying, and completing payments.
-Security: PCI DSS compliance, encryption for sensitive data.
-Database: Payment table with fields for booking ID, transaction ID, amount, and status.
+{
+  "booking_id": 5001,
+  "amount": 2500.00,
+  "currency": "USD",
+  "payment_method": "card"
+}
+##### Output:
+##### Success:
+
+{
+  "message": "Payment successful.",
+  "transaction_id": "TRX12345"
+}
+##### Failure:
+
+{
+  "error": "Payment failed. Insufficient funds."
+}
+#### Validation Rules:
+
+Booking ID: Must be valid and not already paid.
+Amount: Must match the booking total.
+Performance Criteria:
+
+Ensure payment confirmation within 1 second.
+Support 50 simultaneous payment transactions.
 ### 6. Booking History
-#### Functional Requirements:
+API Endpoints:
 
-Users can view a list of their past bookings with details (property name, booking dates, status).
-Include sorting and filtering options (e.g., by date, status).
-#### Technical Requirements:
+GET /api/bookings/history: Fetch user booking history.
+##### Input:
+Headers: JWT Token for authentication.
+Query Parameters: Pagination (page, limit).
+##### Output:
 
-Frontend: History page with a table or list view.
-Backend: Endpoint to retrieve user-specific booking history.
-Database: Query the booking table using user ID as a filter.
+##### Success:
+
+[
+  {
+    "booking_id": 5001,
+    "property_title": "Beachside Villa",
+    "start_date": "2024-12-01",
+    "end_date": "2024-12-10",
+    "status": "Completed"
+  },
+  ...
+]
+Performance Criteria:
+
+Retrieve results in under 300ms.
+Handle 1,000 historical records per user.
 ### 7. Notifications
-#### Functional Requirements:
+API Endpoints:
 
-Send email and in-app notifications for booking confirmations, cancellations, and payment updates.
-Support real-time notifications (e.g., for booking status changes).
-#### Technical Requirements:
+POST /api/notifications/send: Send a notification.
+GET /api/notifications: Fetch all notifications for a user.
+#### Validation Rules:
 
-Frontend: Toast notifications for real-time updates, inbox for older messages.
-Backend: Notification service to queue and send messages.
-Third-party Integration: Use services like Twilio or Firebase for real-time notifications.
+Content: Must be under 200 characters.
+Type: Must be one of email, SMS, push.
+Performance Criteria:
+
+Process and deliver notifications within 2 seconds.
+Handle 5,000 notifications per minute.
 ### 8. Admin Dashboard
-#### Functional Requirements:
+API Endpoints:
 
-Allow admins to monitor and manage users, properties, bookings, and payments.
-Provide insights via graphs and metrics (e.g., total bookings, revenue).
-Role-based access control for admin tools.
-#### Technical Requirements:
+GET /api/admin/overview: Fetch platform metrics (e.g., total bookings, revenue).
+POST /api/admin/actions: Perform administrative actions like suspending users or deleting properties.
+Performance Criteria:
 
-Frontend: Dashboard UI with data visualization (e.g., charts using libraries like Chart.js).
-Backend: Admin-specific endpoints for managing data and generating reports.
-Database: Aggregated queries for metrics (e.g., total bookings by month).
+Dashboard queries must return data in under 1 second for datasets up to 100,000 records.
 ### 9. Reviews and Ratings
-#### Functional Requirements:
+API Endpoints:
 
-Users can leave reviews and ratings for properties.
-Reviews linked to completed bookings to prevent abuse.
-Hosts can respond to reviews.
-#### Technical Requirements:
+POST /api/reviews: Submit a review.
+##### Input:
 
-Frontend: Review submission form and display of reviews.
-Backend: APIs for managing reviews and responses.
-Database: Review table with fields for user ID, property ID, rating, and comments.
+{
+  "user_id": 5,
+  "property_id": 101,
+  "rating": 4,
+  "comment": "Great place!"
+}
+##### Output:
+
+{
+  "message": "Review submitted successfully."
+}
+#### Validation Rules:
+
+Rating: Must be an integer between 1 and 5.
+Comment: Max 500 characters.
+Performance Criteria:
+
+API response time < 300ms.
+Support 1,000 concurrent review submissions.
+
 ### 10. Security Features
-#### Functional Requirements:
-
-Prevent unauthorized access to sensitive user data.
-Secure file uploads to avoid malicious content.
-Implement rate limiting to prevent abuse of APIs.
 #### Technical Requirements:
 
-Use HTTPS, OWASP best practices, and regular security audits.
-Sanitize all user inputs to prevent SQL injection and XSS attacks.
-Employ CSRF tokens for secure form submissions.
-### 11. Scalability and Performance
-#### Functional Requirements:
-
-Support concurrent users and large datasets efficiently.
-Ensure fast loading times for property searches and listings.
-#### Technical Requirements:
-
-Use caching (e.g., Redis) for frequently accessed data.
-Implement database sharding for scalability.
-Deploy the platform on scalable infrastructure (e.g., AWS, Google Cloud).
+Use HTTPS for all endpoints.
+Sanitize all user inputs to prevent XSS and SQL injection.
+Implement rate limiting for API requests (e.g., max 10 requests/second per user).
+Encrypt sensitive data such as passwords (bcrypt) and payment information (AES256).
+Performance Goals
+System uptime: 99.9% availability.
+Scalability: Support 10,000 active users with <1 second response time for key endpoints.
