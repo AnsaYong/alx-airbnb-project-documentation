@@ -4,7 +4,7 @@ Welcome to the Airbnb Clone project repository. This initiative aims to develop 
 ### Project Overview
 This repository encompasses the planning phase of the application setup, detailing the following components:
 
-0. features-and-functionalities/
+0. **features-and-functionalities/**
 This contains a file which shows details of the key features and functionalities of the Airbnb Clone application.
 
 The key features of the application include:
@@ -17,17 +17,17 @@ The key features of the application include:
    * **Reviews and Ratings**: Facilitate feedback between guests and hosts.
    * **Admin Dashboard**: Comprehensive monitoring and management tools for administrators.
 
-1. use-case-diagram/
+1. **use-case-diagram/**
 Visual representation of system interactions between features and functionalities.
 
-2. user-stories/
+2. **user-stories/**
 Detailed user stories based on the use case diagrams, outlining user interactions with the system.
 
-3. data-flow-diagram/
+3. **data-flow-diagram/**
 Mapping of data flow within the system to understand data processing and storage.
 
-4. flowcharts/
+4. **flowcharts/**
 Visual diagrams illustrating the workflow and processes of backend features.
 
-5. requirements.md
+5. **requirements.md**
 Comprehensive documentation of technical and functional requirements for each feature.
