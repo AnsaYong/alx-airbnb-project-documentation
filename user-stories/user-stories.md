@@ -1,57 +1,40 @@
-### 1. User Registration
+### User Management
+1. As a guest, I want to register on the platform by providing my name, email, password, and phone number so that I can access its features.
+2. As a host, I want to register on the platform with my name, email, password, phone number, and business details so that I can list properties.
+3. As a user, I want to log in securely using my email and password so that I can access my account.
+4. As a user, I want to update my profile information, including my name, phone number, and profile picture, so that I can keep my details current.
+5. As a host, I want to update additional fields like my business name and property preferences to manage my properties more effectively.
 
-#### User Story:
-As a user, I want to register an account so that I can access the platform's features, such as listing or booking properties.
+### Property Listings Management
+6. As a host, I want to create new property listings with details like title, description, location, price, amenities, and availability so that I can attract guests.
+7. As a host, I want to edit my existing property listings to make changes as needed.
+8. As a host, I want to delete a property listing if it is no longer available so that guests won’t see outdated information.
+Search and Filtering
+9. As a guest, I want to search for property listings by entering a location so that I can find a place to stay.
+10. As a guest, I want to filter property listings by price, amenities, and guest capacity so that I can refine my search results.
+11. As a guest, I want to sort property listings by price or ratings so that I can view options in my preferred order.
+12. As a guest, I want to see a message if no listings match my search criteria so that I understand why no results are displayed.
 
-#### Acceptance Criteria:
-The registration form must validate input fields like email and password.
-An error message is displayed if the email is already registered.
-Upon successful registration, the user receives a confirmation email.
+### Booking Management
+13. As a guest, I want to book available dates for a property so that I can secure a reservation.
+14. As a guest or host, I want to cancel a booking when needed and view the applicable refund policies.
+15. As a host, I want to confirm or reject booking requests so that I can manage my calendar.
+16. As a guest or host, I want to view the status of my bookings (e.g., pending, confirmed, canceled) so that I can keep track of them.
 
-### 2. Property Listing
+### Payment Integration
+17. As a guest, I want to pay for bookings securely using third-party gateways like Stripe or PayPal so that my payments are processed safely.
+18. As a guest, I want to receive automatic refunds if a booking is canceled and the policy applies so that I can trust the platform’s fairness.
+19. As a host, I want to receive payouts after the guest checks in so that I am compensated for my property.
 
-#### User Story:
-As a property owner, I want to list my property on the platform so that users can view and book it.
+### Reviews and Ratings
+20. As a guest, I want to leave a review and rating for a property after my stay so that I can share my experience with others.
+21. As a host, I want to respond to guest reviews so that I can address their feedback publicly.
 
-#### Acceptance Criteria:
-Property details such as title, price, location, and amenities must be provided.
-Only authenticated users with the "host" role can list properties.
-A success message confirms that the property is listed and visible to potential renters.
+### Notifications System
+22. As a user, I want to receive notifications (via email or in-app) about booking confirmations, cancellations, and payments so that I am updated about important events.
 
-### 3. Search for Properties
-
-#### User Story:
-As a user, I want to search for properties based on location, price range, and amenities so that I can find a property that meets my needs.
-
-#### Acceptance Criteria:
-Users can search properties by location (required) and optionally filter by price and amenities.
-Search results display the property title, price, location, and a thumbnail image.
-An appropriate message appears if no properties match the search criteria.
-
-### 4. Booking a Property
-
-#### User Story:
-As a user, I want to book a property for specific dates so that I can secure accommodation for my trip.
-
-#### Acceptance Criteria:
-The system checks for availability for the selected dates before confirming the booking.
-Users receive a booking confirmation email upon success.
-An error message is displayed if the property is not available for the selected dates.
-
-### 5. Payment for Bookings
-
-#### User Story:
-As a user, I want to securely pay for my booking so that I can confirm my reservation.
-
-#### Acceptance Criteria:
-Payments can be made via credit/debit cards or other supported payment methods.
-The system verifies payment success and generates a transaction ID.
-Users are notified if the payment fails, with a reason provided (e.g., insufficient funds).
-
-### Additional Stories (Optional)
-
-#### 1. Notifications:
-As a user, I want to receive notifications about my bookings so that I stay informed about updates or changes.
-
-#### 2. Reviews and Ratings:
-As a user, I want to leave a review and rating for a property I stayed in so that I can share my experience with others.
+### Admin Dashboard
+23. As an admin, I want to view, suspend, or delete user accounts so that I can maintain the platform’s integrity.
+24. As an admin, I want to review and approve or reject new property listings so that only valid and accurate listings are published.
+25. As an admin, I want to track bookings by filtering them by status or user so that I can monitor platform activity.
+26. As an admin, I want to view payment reports with a summary of transactions so that I can oversee financial operations.
